@@ -1,4 +1,9 @@
 Chapter 3: WSE: WS Enhancements:
+* Overview of SOA Development Platforms
+* Basic .Net Web Services and Application_Start     
+    * Service development (provider)
+
+
 
 WCF: All the features
 AJAX: Only Platform-independent web service
@@ -283,9 +288,45 @@ Needed to modify files:
         * you should get back "Hello World"
 
 
-    
+
+==============================Lecture 2: Servie Deployment, Hosting, and Registration==============
+Overview:
+* Service hosting and deployment (provider)
+* Service publication and registration (broker)
+
+    * A service is an active object it has to be running all the time so that it can just take intput
+        process and send back.
+    *  Hosting is eveywhere in all three parties the Service Broker, the Applicaiton Builder and the Service
+        providers.
+    * We will also discuss registry and repository.
 
         
+    * Deploy your services inot the given server (WebStrar).
+        You must read the tutrials that come iwth the project.
+    * Publish your Services Find services published by other service providers
+    
+
+
+    =============================Servcie Brokers======================
+    A broaker with all desired featrues: 
+        * Servcie registry (dicretory) // Availibe
+        * Servcie reposiotry // Avaiile
+        * Servcie requiredment and specification
+        * Applicaiton Templates
+        * GUI Templates
+        * Collaboration  Protocols and Templates
+        * Database adn ontology
+        * Integrated testing tools 
+        * Assurance of quality of service 
+        * Expanable and REcomposable
+
+    OASIS Standard ebXML integrated Registry / Repsoitory Extensive automation
+
+    Oasis Standard UDDI Registry Limite automation
+
+    Ad Hoc Registry List
+
+
 
 
 
