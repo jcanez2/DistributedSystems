@@ -327,6 +327,81 @@ Overview:
     Ad Hoc Registry List
 
 
+    Business Entity Syntax Definition of XMLS
+    XML Scheme (XMLS) is language used to define the syntax of other languages and data structures:
+                                ***Schema***
+    <element name = "businessEntity" type = "uddi: businesEntity"/>
+    <complexType name = "businessEntity">
+        <attribute name = "businessKey" type = "uddi: businessKey" use = "required"/>
+        <attribute name = "operator" type = "string" use = "optional" />
+        <attribute name = "authorizedName" type = "string" use = "optional" />
+        <sequence>
+            <element ref = "uddi: discoveryURLs" minOccurs = "0"/>
+            <element ref = "uddi: name" maxOccurs = "unbounded" />
+            <element ref = "uddi: description" minOccurs = "0" maxOccurs = "unbounded" />
+            <element ref = "uddi: contacts" minOccurs = "0"/>
+            <element ref = "uddi: businessServices" minOccurs = "0"/>
+            <element ref = "uddi: identifiedBag" minOccurs = "0"/>
+            <element ref = "uddi: categoryBag" minOccurs = "0" />
+        </sequence>
+    </complexType>
+    </element>
+
+    ------------------------Example--------------------------------
+    <businessEntity
+        businessKey = "uuid: B1D2A3B4-E445-4F32-75BA-67D123451C39"
+        operator = "http://www.public.asu.edu/~ychen10/teaching/cse445/"
+        authorizedName = "course Instructor">
+        <name> ASU CSE 445-598</name>
+        <description> We provide sample services for SOC eduation </descripton>
+        <contacts>
+            <contacts useType = "general information">
+                <description>Email</description>
+                <personName> Course Instructor </personName>
+                <phone>(480) 965 2769</phone>
+                <email>cse445598instructor@asu.edu</email>
+            </contacts>
+            <contact useType = " assignments and projects">
+                <description>Email</description>
+                <personName> Teaching Assistant</personName>
+                <email>cse445598TA@asu.edu</email>
+            </contacts>
+        </contacts>
+        <businessServices>Education</businessServices>
+
+
+=====================================Application Use Services Through Proxies=======
+* A proxy in client is a "virtual" object that creates a channel to a (remote) service. A client 
+accesses the operations of the srevices by calling the "methods" of the proxy. The "virtual"
+means here: It does not contain the implementation (code) of the methods.
+* An endpoint in a (WSDL) service is an operation interface exposed to outside, so that a client can access the operation.
+It must include address, binding, and contract (operation name, parameter types, return types)
+
+
+
+------------------------------Static Binding vs Dynamic Binding-------------------
+* In object-oriented programming, dynamic binding allows a method call to be bound to the 
+initial address of a mehod at runtuime, instead of a compilation time.
+    * The method must be virtuall method, to allow the child class to redefine the method.
+* In service-oriented programming, dynamic binding, also called dynamic proxy, allows a service to be
+bound to an applicaiotn at runtime, instead of at compileation time.
+    * Do we need dynamic proxy?
+    * Can we choose service and bind service at runtime?
+
+
+----------------Web Application State Management-----------------------------------
+* HTTP is stateless:
+    * Every request is independent of other requests.
+    * Every package is independent of other packages.
+* Web applications are stateless by default: Every access to an applicaiton , is considered from a new client;
+* However, we do need stateful computing in may cases. For example add to cart srevice, counter, stopwatch, etc.
+We cannot use class variable for storing data to be accessed in the next request.
+* Special considerations and mechanisms are necessary in order to provide stateful Web applications.
+
+-   -   -   -   -   
+* View State: A variable that can hold information for multiple access within a page.
+* Cross-Page Posting: Transfer information across the pages.
+* Text File: Store text into server file and retrieve it later.
 
 
 
