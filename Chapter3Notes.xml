@@ -1,0 +1,98 @@
+Chapter 3: WSE: WS Enhancements:
+
+WCF: All the features
+AJAX: Only Platform-independent web service
+Eclipse/AXIs/ Tomcat: all the features
+JEE: All the features:
+NetBeans: All the features
+
+Three party model: we will focus on the Service Provider: 
+.asmx is still available but has no security features.
+.svc for WCF we will be using
+WCF is for heavy duty service
+We can go from WCF to restful by removing features
+
+
+
+.svc is the replacement for the old .asmx, it is the service created in Windows Communication Foundation.
+The key is the standard interface.
+We are going to define a standard interface on top of the class or object, this is the main difference.
+We develop a service by developing a class or object.
+ Interface can be summarized by ABC
+Address: Where (URL)
+Binding: How (Protocol)
+Contract: What (The interface of the Method)(This is the method signature in the .cs file and it has the [OperationContract] above it. This is an interface class that is extended in the .svc.cs file by the actual logic of the class.
+We put our service on a server and expose the endpoint.
+The endpoint is what we expose to the client. This is the ABC that can be used by the client and what is used as a proxy in place of the actual method in the client.
+Communication Protocol
+HTTP(S)
+SOAP
+WSDL: (Web Service Description Language)
+This is the interface file
+It describes the web services
+It specifically describes four critical aspects of the web service
+Functionality: the standard taxonomy
+Contract: the return type and parameters(Signature)
+Binding: info about the transfer protocols to be used, usually SOAP(Protocol)
+Address: info for locating the specified service.(URL)
+ABC are auto generated when you use a platform like Visual Studios or a Java platform.
+WSDL is a standard that is written in XML
+Definitions have names or namespaces and we can put multiple services(classes) into that one namespace. And we can also have multiple endpoints(methods) in one service, using multiple ports(URL)’s.
+
+
+<?xml version = “1.0”?>		
+<definitions name = “StockQuote”		<---Definitions
+(namespaces used)
+<types> … </types>			← Message Type are used for input message
+<message> …</messages>		    and output message(signature)
+<portType>				← PortType
+	<operation>... </operation>	← Operation
+</portType>
+<binding>...</binding>		← Binding(Soap)
+<service>				← Service
+	<port>...</port>		← Port(URL)
+</service>
+</definitions>
+
+<?xml version = “1.0”?>
+<definition name = “StockQuote” <!--This is the Root-->
+	targetNamespace = “http://example.com/stockquote.wsdl” <!--declare namespace and qualifiers-->
+	xmlns:tns = “http://example.com/stockquote.wsdl”
+    xmlns: xsd1 = "http://example.com/stockquote.xsd" <!--we can define an .xsd which is a schema to define or data types instead of using the types tages in the local file-->
+    xmlns: soap = "http:schemas.xmlsoap.org/wsdl/soap/"
+    xmlns: "http://schemas.xmlsoap.org/wsdl/">
+
+
+<!--Just like in C and C++ we define the types-->
+this would be the file we are referencing in the namespace the "http://example.com/stockquote.xsd"
+<types>
+    <schema targetNamespace = "http://example.com/stockquote.xsd"
+        xmlns = "http://www.w3.org/2000/10/XMLSchema">
+        <element name = "TradePriceRequest">
+            <complexType>
+                <all> <element name = "tickerSymbol" type = "string"/> </all>
+            </complexType>
+        </element>
+        <element name = "TracePrice">
+            <complexType>
+                <all> <element name = "price" type = "float"/> </all>
+            </complexType>
+        </element>
+    </schema>
+</types>
+
+<message name = "GetLastTradePriceInput">
+    <part name = "body"
+        element = "xsd1: TradePriceRequest"/>
+</message>
+<message name = "GetLastTradePriceOutput">
+    <part name = "body" element = "xsd1: TradePrice"/>
+</message>
+
+<portType name = "StockQuotePortType">
+    <operation name = "GetLastTradePrice">
+        <input message = "tns: GetLastTradePriceInput"/>
+        <output message = "tns: GetLastTraadePriceOutput"/>
+    </operation>
+</portType>
+
