@@ -120,3 +120,180 @@ this would be the file we are referencing in the namespace the "http://example.c
 
 The key point here is that we have abstraction so that we don't have to define the exact implemenations of the 
 language. This allows various languages to be used.
+
+we define binding but we don't directly say that it has to be soap it could also be restful.
+we don't directly put url we use the abstraction of port.
+
+================================From WSDL/SOAP to => To RESTful Services========================
+Developing WCF-Based RESTful Services:
+To turn a WSDL/SOAP service into a RESTful Service you need to modify the following three files.
+Needed to modify files:
+    * .cs
+    * .svc 
+        but not the *.svc.cs
+    * .config 
+
+    ###In the *.cs file you need to add a namespace:
+    "using System.ServiceModel.Web;"
+    For each and every method you want to expose to the outside you need to add:
+    '[WebGet]' // this is the default format
+    so it would look like this in the files
+    [OperationContract]
+    [WebGet]
+    double PiValue()
+
+    // You can also define the input format like so 
+    [OperationContract]
+    [WebGet(UriTemplate = "AbsValue?x={x}")]
+    int AbsValue(int x);
+
+    or 
+
+    [OperationContract]
+    [WebGet(UriTemplate = "add2 ? x = {x} & y = {y}")]
+    int additon(int x, int y);
+
+    ###In the .svc.cs file there are no changes to make
+
+    ###In the .svc file:
+    * add this line of code under the single line that is already there.
+        * 'Factory = "System.ServiceModel.Activation.WebServiceHostFactory"'
+            this goes before the %> that is usually at the end of the first line.
+    
+    ###In the *.config file:
+    * Remove the <system.serviceModel> element form the file.
+
+    Once those three changes are made you can run your service. It will tell you that "endpoint is not found"
+    This is due to us deleting the sreviceModel.
+
+    Instead if you run in your browser the cresponding calls to the host locaiton you will get a resonse, see below:
+    * http://localhost:1722/Service1.svc/PiValue -> this will return -> <double>3.1415926535897931<double>
+    * http://localhost:1722/?Service1.svc/AbsValue?x=-27 -> this will return -> <int>27</int>
+    * ...../Service1.svc/add2?x=15&y=17 -> will return -> <int>32</int>
+
+    ====================Accessing Restful Service in a Program====================================
+    three parts fo the URL the base "http://localhost:1722/Service1.svc/"
+    Operatons Name : AbsValue
+    Parameter value : ?x=-27
+
+    Step 1. 
+        * Build the complete Uri : from the base URI and the parameter 
+        /*
+            Uri baseUri = new Uri("http://newptune.fulton.ad.asu.edu/WSRepository/Servicees/RandomString/Service.svc");
+            // Define UriTemplate from passing parameter 
+            UriTemplate myTemplate = new UriTemplate("GetRandomSTring/{Length}");
+            // Assign values to variable to obtain the complete URI 
+            Uri completeUri = myTemplate.BindByPosition(baseURI, myLength);
+        */
+    Step 2.
+        * Call the RESTful service from within the program.
+        /*
+            WebClient channel = new WebClient(); // create a channel
+            byte[] abc = channel.DownloadData(completeUri); // return byte array
+            Stream strm = new memoryStream(abc); // convert to mem stream 
+            DataContractSerializer obj = new DAtaContractSerializer(typeof(string));
+            string randString = obj.ReadObject(strm).ToString(); // convert to string
+            
+            return randString;
+
+        */
+
+
+    =====================Creating RESTful Web APIs Service without WCF=====================================
+    tutorial can be found at: https://www.tutorialstearcher.com/webapi/create-web-api-project
+    Web APIs just use HTTP to access the services on the internet.
+
+    Step 1. : !!!Do not save to the default location
+    The template you want to use in Visual Studios id "ASP.NET Web Application (.NET Framework)"
+
+    Step 2. Choose a different place to save with names
+
+    Step 3. Choose to make an empty project.
+
+    Step 4. Install a package : Tools-> NuGet Package Manager -> Manage NuGet Packages for Solution...
+        * Browse -> {Search for "Mirosoft.AspNet.WebApi"} -> Check both boxes for "Project" and "MyWebApi"
+        * Select "Install"
+
+    Step 5. Right click the project "not the solution" and add two folders
+        * Add "Configuration" folder
+        * Add "Controllers" folder
+
+    Step 6. Right click the Configuration folder 
+        * Add a class "HellowWebAPIConfig.cs"
+            * add code to the class, for instance:
+                using System;
+                using System.Web.Http;
+                namespace HelloWebAPI.Configuration
+                {
+                    public static class HelloWebAPIConfig 
+                    {
+                        public static void Register(HttpConfiguration config)
+                        {
+                            config.MapHttpAttributeRoutes(); // Web API routes
+                            config.Routes.MapHttpRoute(
+                                name : "DefaultApi", 
+                                routeTemplate: "api/{controller}/{id}",
+                                defaults: new {id = RouteParameter.Optional}
+                            );
+                        }
+                    }
+                }
+
+    Step 7. Right click the project again:
+        * Add -> New Item -> Global Application class (!!! Leave name as default name "Global.asax")
+        * Add the following code to this class:
+            using System;
+            using System.Web.Http;
+            using HelloWebAPI.Configuration;
+
+            namespace MyWebApi
+            {
+                public class Global : System.Web.HttpApplicaiton
+                {
+                    protected void Application_Start(object sender, EventArgs e)
+                    {
+                        GlobalConfigurationConfigure(HelloWebAPIConfig.Register);
+                    }
+                }
+            }
+
+    Step 8. Right Click the "Controller" folder
+         * Add "Controller" -> Select the "Web API 2 Controller - Empty"
+         * Name it "HelloController"
+         * Add the following code to the controller you just created:
+         using System;
+         using System.Web.Http;
+
+         namespace MyWebApi.Controllers
+         {
+             public class HelloController : ApiController
+             {
+                //!!! This is where you put your method, aka your pi value and such
+
+                 public string Get()
+                 {
+                     return "Hello World";
+                 }
+             }
+         }
+
+    Step 9. Start without debugging:
+        * You servcie will run in the web browser.
+        * address will be https://localhost:******/api/hello
+        * you should get back "Hello World"
+
+
+    
+
+        
+
+
+
+
+
+
+
+
+
+
+
