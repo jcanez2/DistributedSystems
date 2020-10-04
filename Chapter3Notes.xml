@@ -96,3 +96,27 @@ this would be the file we are referencing in the namespace the "http://example.c
     </operation>
 </portType>
 
+<binding name = "StockQuoteSoapBinding"
+    type = "tns: StockQuotePortType">
+    <soap: binding style = "document"
+        transport = "http://schemas.xmlsoap.org/soap/http"/>
+    <operation name = "GetLastTradePrice">
+        <soap: operation soapAction = "http://example.com/GetLastTradePrice"/>
+        <input> <soap: body use = "literal"/> </input>
+        <output> <soap: body use = "literal"/> </output>
+    </operation>
+</binding>
+
+<service name = "StockQuoteService">
+    <documentation>
+        This service offers latest stock quotes
+    </documentation>
+    <port name = "StockQuotePort"
+        binding = "tns: StockQuoteBinding">
+        <soap: address location = "http://example.com/stockquote"/>
+    </port>
+</service>
+
+
+The key point here is that we have abstraction so that we don't have to define the exact implemenations of the 
+language. This allows various languages to be used.
